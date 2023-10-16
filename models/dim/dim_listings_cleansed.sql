@@ -10,7 +10,7 @@ select
         else minimum_nights
     end as minimum_nights, --applies to the same column
     host_id,
-    replace(price_str, 'str') :: number(10,2) as price,
+    replace(price_str, '$') :: number(10,2) as price,
     created_at,
     updated_at
 from src_listings

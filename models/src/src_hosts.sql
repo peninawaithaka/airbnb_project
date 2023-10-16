@@ -1,4 +1,4 @@
-with raw_host as (
+with raw_hosts as (
     select * from airbnb.raw.raw_hosts
 )
 select 
