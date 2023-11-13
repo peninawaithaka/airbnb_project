@@ -35,6 +35,8 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   airbnb:
     +materialized: view # the default materialization
+    +post-hook: # executed for every model in our project
+     - "GRANT SELECT ON {{ this }} TO ROLE REPORTER"
     dim:
       +materialized: table
     src:
