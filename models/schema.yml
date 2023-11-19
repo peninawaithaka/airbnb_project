@@ -8,6 +8,7 @@ models:
         tests:
           - unique
           - not_null
+
       - name: host_id
         description: The host's id. References the host table.
         tests:
@@ -15,6 +16,7 @@ models:
           - relationships:
               to: ref('dim_hosts_cleansed')
               field: host_id
+
       - name: room_type
         description: Type of apartment / room
         tests:
@@ -24,12 +26,24 @@ models:
                 - Private room
                 - Shared room
                 - Hotel room
+
       - name: minimum_nights
         description: '{{ doc("dim_listings_cleansed_minimum_nights")}}'
         tests:
           - positive_value
+
+      - name: created_at
+        description: Timestamp of when the listing was created
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: Timestamp_NTZ
+
   - name: dim_listings_w_hosts
     description: Joined listings and hosts data on host_id
+    tests: 
+     - dbt_expectations.expect_table_row_count_to_equal_other_table:
+          compare_model: source('airbnb', 'listings')
+
   - name: dim_hosts_cleansed
     description: Cleansed table which contains airbnb hosts data.
     columns:
@@ -38,10 +52,12 @@ models:
         tests: 
           - not_null
           - unique
+
       - name: HOST_NAME
         description: Name of the host,, replaced with anonymous if null.
         tests: 
           - not_null
+
       - name: IS_SUPERHOST
         description: Defines whether the hosts is a superhost.
 
